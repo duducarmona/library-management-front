@@ -3,33 +3,37 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 class Books extends Component {
-  state = {
-    books: this.props.list
-  }
-
   noBooksAvailable() {
     toast.info('Sorry, there are no books available at the moment')
   };
 
   render() {
-    const { books } = this.state;
+    const { list, mainLibrary, onClick, disableBorrow } = this.props;
+    let title = 'Library';
 
+    if (!mainLibrary) {
+      title = 'User books';
+    }
+    
     return (
       <div>
-        <ToastContainer
-          position='bottom-center'
-          type='info'
-          autoClose={false}
-        >
-        </ToastContainer>
-        <h1>List of books</h1>
-        {!books.length && this.noBooksAvailable()}
+        <h1>{title}</h1>
+        {mainLibrary && !list.length && 
+          <ToastContainer
+            position='bottom-center'
+            type='info'
+            autoClose={false}
+          >
+            {this.noBooksAvailable()}
+          </ToastContainer>
+        }
         <ul>
-          {books.map((book, index) => (
+          {list.map((book, index) => (
             <li key={index}>
               <p>{book.title}</p>
               <p>{book.author}</p>
               <img src={book.image} alt={book.title} />
+              <button id='borrow-btn' onClick={() => onClick(index)} disabled={disableBorrow} >Borrow</button>
             </li>
           ))}
         </ul>
