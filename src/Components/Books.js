@@ -8,7 +8,13 @@ class Books extends Component {
   };
 
   render() {
-    const { list, mainLibrary, onClick, disableBorrow } = this.props;
+    const { 
+      list, 
+      mainLibrary, 
+      onClick, 
+      disableBorrow, 
+      existsInUserList 
+    } = this.props;
     let title = 'Library';
 
     if (!mainLibrary) {
@@ -33,7 +39,14 @@ class Books extends Component {
               <p>{book.title}</p>
               <p>{book.author}</p>
               <img src={book.image} alt={book.title} />
-              <button id='borrow-btn' onClick={() => onClick(index)} disabled={disableBorrow} >Borrow</button>
+                <button 
+                  id='borrow-btn' 
+                  onClick={() => onClick(index)} 
+                  disabled={disableBorrow || existsInUserList(index)}
+                >
+                  Borrow
+                </button>
+              <p>Number of copies: {book.copies}</p>
             </li>
           ))}
         </ul>
