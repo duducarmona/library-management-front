@@ -16,9 +16,13 @@ class Books extends Component {
       existsInUserList 
     } = this.props;
     let title = 'Library';
+    let buttonText = 'Borrow';
+    let buttonId = 'borrow-btn';
 
     if (!mainLibrary) {
       title = 'User books';
+      buttonText = 'Return';
+      buttonId = 'return-btn';
     }
     
     return (
@@ -40,11 +44,11 @@ class Books extends Component {
               <p>{book.author}</p>
               <img src={book.image} alt={book.title} />
                 <button 
-                  id='borrow-btn' 
+                  id={buttonId} 
                   onClick={() => onClick(index)} 
-                  disabled={disableBorrow || existsInUserList(index)}
+                  disabled={mainLibrary && (disableBorrow || existsInUserList(index))}
                 >
-                  Borrow
+                  {buttonText}
                 </button>
               <p>Number of copies: {book.copies}</p>
             </li>

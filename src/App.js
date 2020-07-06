@@ -33,6 +33,20 @@ class App extends Component {
         isbn: '9780142437964',
         image: 'https://images-na.ssl-images-amazon.com/images/I/51Wrlbko5QL._SX332_BO1,204,203,200_.jpg',
         copies: 3
+      },
+      {
+        title: 'The Great Gatsby',
+        author: 'F. Scott Fitzgerald',
+        isbn: '9780142437957',
+        image: 'https://images-na.ssl-images-amazon.com/images/I/41iers+HLSL._SX326_BO1,204,203,200_.jpg',
+        copies: 2
+      },
+      {
+        title: 'One Hundred Years of Solitude',
+        author: 'Gabriel Garcia Marquez',
+        isbn: '9780142437963',
+        image: 'https://images-na.ssl-images-amazon.com/images/I/51Zr6Pd32ML._SX330_BO1,204,203,200_.jpg',
+        copies: 1
       }
     ],
     userBooks: [],
@@ -46,7 +60,7 @@ class App extends Component {
   borrowBook = (i) => {
     const { library, userBooks } = this.state;
     const newLibrary = [...library];
-    const book = newLibrary[i];
+    const book = Object.assign({}, newLibrary[i]);
 
     if (book.copies === 1) {
       newLibrary.splice(i, 1);
@@ -55,7 +69,34 @@ class App extends Component {
       newLibrary[i].copies--;
     }
 
+    book.copies = 1;
+
     const newUserBooks = [...userBooks, book];
+
+    this.setState({
+      library: newLibrary,
+      userBooks: newUserBooks,
+      disableBorrow: newUserBooks.length > 1
+    });
+  }
+
+  returnBook = (i) => {
+    const { userBooks, library } = this.state;
+    const newUserBooks = [...userBooks];
+    const bookToReturn = newUserBooks.splice(i, 1);
+    const newLibrary = [...library];
+    let exists = false;
+
+    for (let i = 0; i < newLibrary.length; i++) {
+      if (bookToReturn[0].isbn === newLibrary[i].isbn) {
+        newLibrary[i].copies++;
+        exists = true;
+      }
+    }
+
+    if (!exists) {
+      newLibrary.push(bookToReturn[0]);
+    }
 
     this.setState({
       library: newLibrary,
@@ -124,6 +165,7 @@ class App extends Component {
                 id='user-library' 
                 list={userBooks} 
                 mainLibrary={false}
+                onClick={this.returnBook}
                 existsInUserList={this.existsInUserList}
               />
             </div>

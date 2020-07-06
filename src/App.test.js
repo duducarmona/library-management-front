@@ -141,8 +141,10 @@ describe('Checking the list of books', () => {
 
 describe('User can borrow books from the library', () => {
   it('Each book should have a Borrow button', () => {
-    liArray.forEach(li => {
-      const buttonArray = li.find('button');
+    const mainLibrary = appMount.find('#main-library').find('li');
+    
+    mainLibrary.forEach(book => {
+      const buttonArray = book.find('button');
 
       expect(buttonArray.length).toEqual(1);
       expect(buttonArray.text()).toEqual('Borrow');
@@ -244,5 +246,39 @@ describe('User can borrow a copy of a book from the library', () => {
     appMount.find('#borrow-btn').first().simulate('click');
 
     expect(appMount.find('#borrow-btn').first().getElement().props.disabled).toBeTruthy();
+  });
+});
+
+describe('User can return books to the library', () => {
+  it('Each book in the user list should have a Return button', () => {
+    const borrowBtn = appMount.find('#borrow-btn').first();
+
+    borrowBtn.simulate('click');
+    borrowBtn.simulate('click');
+
+    const userBooks = appMount.find('#user-library').find('li');
+    
+    userBooks.forEach(book => {
+      const buttonArray = book.find('button');
+
+      expect(buttonArray.length).toEqual(1);
+      expect(buttonArray.text()).toEqual('Return');
+    });
+  });
+
+  it('When the user clicks on Return button the book pass to Main library list', () => {
+    appMount.find('#borrow-btn').first().simulate('click');
+
+    const numberOfBooksInUserBeforeReturn = appMount.find('#user-library').find('li').length;
+
+    appMount.find('#return-btn').first().simulate('click');
+
+    const numberOfBooksInUserAfterReturn = appMount.find('#user-library').find('li').length;
+
+    expect(numberOfBooksInUserBeforeReturn - 1).toEqual(numberOfBooksInUserAfterReturn);
+  });
+
+  it('If the user has 2 books and one is returned, the Borrow buttons get enabled again', () => {
+
   });
 });
