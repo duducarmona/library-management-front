@@ -154,7 +154,8 @@ class App extends Component {
           <Route exact path='/' >
             <div className='wrapper-books'>
               <Books 
-                id='main-library' 
+                id='main-library'
+                className='main-library'
                 list={library} 
                 mainLibrary={true} 
                 onClick={this.borrowBook} 
@@ -162,7 +163,8 @@ class App extends Component {
                 existsInUserList={this.existsInUserList} 
               />
               <Books 
-                id='user-library' 
+                id='user-library'
+                className='user-library'
                 list={userBooks} 
                 mainLibrary={false}
                 onClick={this.returnBook}
